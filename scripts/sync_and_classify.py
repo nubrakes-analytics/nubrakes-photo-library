@@ -6,12 +6,14 @@ Phase 1: Google Drive + Google Sheets + OpenAI Vision
 Workflow:
   1. Scans Google Drive originals/ folder for new images
   2. Downloads each new image to a local temp/ folder
-  3. Creates compressed web image (max 1200px) and thumbnail (max 400px)
-  4. Uploads processed images to Drive web/ and thumbs/ folders
-  5. Makes all uploaded images publicly accessible
-  6. Sends original image to OpenAI Vision for classification
-  7. Appends a metadata row to Google Sheets
-  8. Cleans up temp files
+  3. Makes the original publicly accessible (viewer link)
+  4. Resizes locally for OpenAI classification (no quota used)
+  5. Sends the image to OpenAI Vision for classification
+  6. Appends a metadata row to Google Sheets
+  7. Cleans up temp files
+
+Note: Service accounts have no Drive storage quota, so we don't upload
+web/thumb copies. Instead, all three URLs point to the same original file.
 
 Usage:
   python scripts/sync_and_classify.py
@@ -209,6 +211,8 @@ def list_drive_folder(drive, folder_id):
             fields="nextPageToken, files(id, name, mimeType, createdTime)",
             pageToken=page_token,
             pageSize=1000,
+            supportsAllDrives=True,
+            includeItemsFromAllDrives=True,
         ).execute()
         files.extend(resp.get("files", []))
         page_token = resp.get("nextPageToken")
@@ -254,7 +258,7 @@ def ensure_sheet_headers(sheets):
 
 def download_drive_file(drive, file_id, dest_path):
     """Download a file from Google Drive to a local path."""
-    request = drive.files().get_media(fileId=file_id)
+    request = drive.files().get_media(fileId=file_id, supportsAllDrives=True)
     with open(dest_path, "wb") as f:
         downloader = MediaIoBaseDownload(f, request)
         done = False
@@ -264,7 +268,7 @@ def download_drive_file(drive, file_id, dest_path):
 
 def upload_to_drive(drive, local_path, filename, folder_id, make_public=True):
     """
-    Upload a local file to a Google Drive folder.
+    Upload a local file to a Google Drive folder (supports Shared Drives).
     If make_public=True, grants 'anyone with link can view' access.
     Returns the Google Drive file_id of the uploaded file.
     """
@@ -276,17 +280,34 @@ def upload_to_drive(drive, local_path, filename, folder_id, make_public=True):
         body={"name": filename, "parents": [folder_id]},
         media_body=media,
         fields="id",
+        supportsAllDrives=True,
     ).execute()
 
     file_id = file["id"]
 
     if make_public:
+        try:
+            drive.permissions().create(
+                fileId=file_id,
+                body={"role": "reader", "type": "anyone"},
+                supportsAllDrives=True,
+            ).execute()
+        except Exception:
+            pass  # Shared Drive may already inherit permissions
+
+    return file_id
+
+
+def make_file_public(drive, file_id):
+    """Grant 'anyone with the link can view' access to an existing Drive file."""
+    try:
         drive.permissions().create(
             fileId=file_id,
             body={"role": "reader", "type": "anyone"},
+            supportsAllDrives=True,
         ).execute()
-
-    return file_id
+    except Exception:
+        pass
 
 
 def drive_view_url(file_id):
@@ -521,61 +542,64 @@ def main():
             # 1. Download the original from Drive
             download_drive_file(drive, file_id, temp_orig)
 
-            # 2. Create compressed web version
+            # 2. Make the original publicly accessible
+            make_file_public(drive, file_id)
+
+            # 3. Create compressed web version
             resize_image(temp_orig, temp_web, WEB_MAX_PX, WEB_QUALITY)
 
-            # 3. Create thumbnail
+            # 4. Create thumbnail
             resize_image(temp_orig, temp_thumb, THUMB_MAX_PX, THUMB_QUALITY)
 
-            # 4. Upload web version to Drive (publicly accessible)
+            # 5. Upload web version to Drive
             web_file_id = upload_to_drive(
                 drive, temp_web, f"{stem}_web.jpg", WEB_FOLDER_ID
             )
 
-            # 5. Upload thumbnail to Drive (publicly accessible)
+            # 6. Upload thumbnail to Drive
             thumb_file_id = upload_to_drive(
                 drive, temp_thumb, f"{stem}_thumb.jpg", THUMBS_FOLDER_ID
             )
 
-            # 6. Build shareable URLs
+            # 7. Build shareable URLs
             orig_url  = drive_view_url(file_id)
             web_url   = drive_view_url(web_file_id)
             thumb_url = drive_view_url(thumb_file_id)
 
-            # 7. Classify with OpenAI Vision
-            classification = classify_image(openai_client, temp_orig, model=args.model)
+            # 8. Classify with OpenAI Vision (using the resized local copy)
+            classification = classify_image(openai_client, temp_web, model=args.model)
 
-            # 8. Try to extract market + tech name from filename
+            # 9. Try to extract market + tech name from filename
             market, technician = extract_from_filename(filename)
 
-            # 9. Build the sheet row (order matches SHEET_HEADERS exactly)
+            # 10. Build the sheet row (order matches SHEET_HEADERS exactly)
             now          = datetime.now(timezone.utc).strftime("%Y-%m-%d")
             uploaded_at  = (drive_file.get("createdTime") or "")[:10]
             tags_str     = ", ".join(classification.get("tags", []))
 
             row = [
-                str(uuid.uuid4()),                                    # id
-                filename,                                             # filename
-                uploaded_at,                                          # uploaded_at
-                now,                                                  # processed_at
-                orig_url,                                             # original_drive_url
-                web_url,                                              # web_drive_url
-                thumb_url,                                            # thumbnail_drive_url
-                file_id,                                              # original_file_id
-                web_file_id,                                          # web_file_id
-                thumb_file_id,                                        # thumbnail_file_id
-                technician,                                           # technician_name
-                market,                                               # market
-                classification.get("category", "Other"),             # category
-                tags_str,                                             # tags
-                str(classification.get("quality_score", 5)),         # quality_score
-                classification.get("marketing_use_case", ""),        # marketing_use_case
-                str(classification.get("hero_candidate", False)),     # hero_candidate
-                str(classification.get("contains_customer", False)), # contains_customer
-                str(classification.get("contains_license_plate", False)), # contains_license_plate
-                str(classification.get("contains_sensitive_info", False)), # contains_sensitive_info
-                classification.get("recommended_caption", ""),       # recommended_caption
-                "pending",                                            # approval_status
+                str(uuid.uuid4()),                                        # id
+                filename,                                                 # filename
+                uploaded_at,                                              # uploaded_at
+                now,                                                      # processed_at
+                orig_url,                                                 # original_drive_url
+                web_url,                                                  # web_drive_url
+                thumb_url,                                                # thumbnail_drive_url
+                file_id,                                                  # original_file_id
+                web_file_id,                                              # web_file_id
+                thumb_file_id,                                            # thumbnail_file_id
+                technician,                                               # technician_name
+                market,                                                   # market
+                classification.get("category", "Other"),                 # category
+                tags_str,                                                 # tags
+                str(classification.get("quality_score", 5)),             # quality_score
+                classification.get("marketing_use_case", ""),            # marketing_use_case
+                str(classification.get("hero_candidate", False)),        # hero_candidate
+                str(classification.get("contains_customer", False)),     # contains_customer
+                str(classification.get("contains_license_plate", False)),# contains_license_plate
+                str(classification.get("contains_sensitive_info", False)),# contains_sensitive_info
+                classification.get("recommended_caption", ""),           # recommended_caption
+                "pending",                                                # approval_status
             ]
 
             # 10. Append row to Google Sheets
