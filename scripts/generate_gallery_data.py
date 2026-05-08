@@ -65,47 +65,64 @@ def sheet_row_to_photo(headers, row):
     """
     Convert a Google Sheets row (list of strings) into a photo dict
     that matches the gallery's expected JSON format.
+    Handles both Phase 1 rows (missing Phase 2 columns) and Phase 2 rows.
     """
     # Pad the row to the same length as headers (Sheets omits trailing blank cells)
     padded = row + [""] * (len(headers) - len(row))
     record = dict(zip(headers, padded))
 
     return {
-        # Core identity
+        # ── Core identity ─────────────────────────────────────
         "id":                     record.get("id", ""),
         "filename":               record.get("filename", ""),
 
-        # Context
+        # ── Context ───────────────────────────────────────────
         "market":                 record.get("market", ""),
         "technician":             record.get("technician_name", ""),
 
-        # Classification
+        # ── Classification ────────────────────────────────────
         "category":               record.get("category", ""),
         "tags":                   tags_from_string(record.get("tags", "")),
         "quality_score":          to_int(record.get("quality_score", 0)),
         "marketing_use_case":     record.get("marketing_use_case", ""),
         "hero_candidate":         to_bool(record.get("hero_candidate", "")),
 
-        # Safety flags
+        # ── Safety flags ──────────────────────────────────────
         "contains_customer":      to_bool(record.get("contains_customer", "")),
         "contains_license_plate": to_bool(record.get("contains_license_plate", "")),
         "contains_sensitive_info":to_bool(record.get("contains_sensitive_info", "")),
 
-        # Caption
+        # ── Caption ───────────────────────────────────────────
         "recommended_caption":    record.get("recommended_caption", ""),
 
-        # URLs (Google Drive public links)
+        # ── URLs ──────────────────────────────────────────────
         "thumbnail_url":          record.get("thumbnail_drive_url", ""),
         "web_url":                record.get("web_drive_url", ""),
         "original_url":           record.get("original_drive_url", ""),
 
-        # Dates
+        # ── Dates ─────────────────────────────────────────────
         "uploaded_at":            record.get("uploaded_at", ""),
         "processed_at":           record.get("processed_at", ""),
 
-        # Approval
+        # ── Approval (kept for backward compat, not shown in gallery) ──
         "approval_status":        record.get("approval_status", "pending"),
-        "approved_for_marketing": record.get("approval_status", "").lower() == "approved",
+
+        # ── Phase 2: Duplicate detection ──────────────────────
+        "duplicate_status":       record.get("duplicate_status", "Unique"),
+        "duplicate_of":           record.get("duplicate_of", ""),
+        "duplicate_confidence":   to_int(record.get("duplicate_confidence", 0)),
+        "duplicate_group_id":     record.get("duplicate_group_id", ""),
+
+        # ── Phase 2: Best-photo scoring ───────────────────────
+        "best_photo_score":       to_int(record.get("best_photo_score", 0)),
+        "quality_tier":           record.get("quality_tier", ""),
+        "score_reason":           record.get("score_reason", ""),
+        "recommended_usage":      record.get("recommended_usage", ""),
+
+        # ── Phase 2: Hero-image selection ─────────────────────
+        "hero_score":             to_int(record.get("hero_score", 0)),
+        "hero_reason":            record.get("hero_reason", ""),
+        "hero_use_case":          record.get("hero_use_case", ""),
     }
 
 
@@ -198,12 +215,22 @@ def main():
     # ── Quick stats ───────────────────────────────────────────
     if photos:
         from collections import Counter
-        cats      = Counter(p["category"] for p in photos)
-        approvals = Counter(p["approval_status"] for p in photos)
-        heroes    = sum(1 for p in photos if p["hero_candidate"])
+        cats    = Counter(p["category"]      for p in photos)
+        tiers   = Counter(p["quality_tier"]  for p in photos if p["quality_tier"])
+        dups    = Counter(p["duplicate_status"] for p in photos if p["duplicate_status"])
+        heroes  = sum(1 for p in photos if p["hero_score"] >= 80)
+        top_heroes = sorted(
+            [p for p in photos if p["hero_score"] >= 60],
+            key=lambda x: x["hero_score"], reverse=True
+        )[:3]
         print(f"\nSummary:")
-        print(f"  Approval status : {dict(approvals)}")
-        print(f"  Hero candidates : {heroes}")
+        print(f"  Quality tiers   : {dict(tiers)}")
+        print(f"  Duplicate status: {dict(dups)}")
+        print(f"  Strong heroes (score≥80) : {heroes}")
+        if top_heroes:
+            print(f"  Top hero images :")
+            for p in top_heroes:
+                print(f"    [{p['hero_score']}] {p['filename']} — {p['hero_use_case']}")
         print(f"  Top category    : {cats.most_common(1)[0]}")
 
     print(f"\nNext steps:")

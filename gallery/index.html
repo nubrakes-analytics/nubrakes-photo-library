@@ -31,81 +31,66 @@
   --tray-h:      88px;
 }
 
-/* ─── Reset ─────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: var(--gray-50);
-  color: var(--gray-900);
-  min-height: 100vh;
+  background: var(--gray-50); color: var(--gray-900); min-height: 100vh;
 }
 
 /* ─── Header ─────────────────────────────────────────────── */
 .header {
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
-  color: var(--white);
-  padding: 18px 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: var(--shadow-md);
+  color: var(--white); padding: 18px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+  position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-md);
 }
 .header-brand { display: flex; align-items: center; gap: 14px; }
-.header-logo  {
-  background: var(--orange); color: var(--white);
-  font-weight: 800; font-size: 14px; letter-spacing: -.3px;
-  padding: 5px 12px; border-radius: 6px;
-}
+.header-logo  { background: var(--orange); color: var(--white); font-weight: 800; font-size: 14px; letter-spacing: -.3px; padding: 5px 12px; border-radius: 6px; }
 .header-title h1 { font-size: 17px; font-weight: 700; }
 .header-title p  { font-size: 11px; opacity: .65; margin-top: 1px; }
 .header-counts   { display: flex; gap: 10px; flex-wrap: wrap; }
 .count-badge {
-  background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.15);
-  border-radius: 20px; padding: 4px 14px;
-  font-size: 11px; white-space: nowrap; text-align: center;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.15);
+  border-radius: 20px; padding: 4px 14px; font-size: 11px; white-space: nowrap; text-align: center;
 }
 .count-badge strong { display: block; font-size: 18px; line-height: 1.2; }
 
 /* ─── Filter bar ──────────────────────────────────────────── */
 .filters {
-  background: var(--white);
-  border-bottom: 1px solid var(--gray-200);
+  background: var(--white); border-bottom: 1px solid var(--gray-200);
   padding: 10px 28px;
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  position: sticky; top: 65px; z-index: 90;
-  box-shadow: var(--shadow-sm);
+  position: sticky; top: 65px; z-index: 90; box-shadow: var(--shadow-sm);
 }
 .filter-group { display: flex; align-items: center; gap: 5px; }
 .filter-label { font-size: 10px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
 select, input[type="search"] {
   border: 1px solid var(--gray-300); border-radius: 7px;
   padding: 5px 9px; font-size: 12px; color: var(--gray-900);
-  background: var(--white); outline: none; height: 32px;
-  transition: border-color .15s;
+  background: var(--white); outline: none; height: 32px; transition: border-color .15s;
 }
 select:focus, input:focus { border-color: var(--navy-mid); box-shadow: 0 0 0 3px rgba(30,58,95,.1); }
-.search-input { width: 200px; }
-.toggle-wrap { display: flex; align-items: center; gap: 5px; }
-.toggle-wrap label { font-size: 11px; color: var(--gray-700); cursor: pointer; white-space: nowrap; }
-input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; accent-color: var(--orange); }
+.search-input { width: 180px; }
+.filter-divider { width: 1px; height: 20px; background: var(--gray-200); margin: 0 4px; }
 .btn-clear-filters {
   margin-left: auto; padding: 5px 12px; border-radius: 7px;
   border: 1px solid var(--gray-300); background: var(--white);
-  font-size: 11px; color: var(--gray-700); cursor: pointer; height: 32px;
-  transition: all .15s;
+  font-size: 11px; color: var(--gray-700); cursor: pointer; height: 32px; transition: all .15s;
 }
 .btn-clear-filters:hover { background: var(--gray-100); }
+/* Hero quick-filter button */
+.btn-hero-filter {
+  padding: 5px 12px; border-radius: 7px; height: 32px;
+  border: 1px solid var(--orange); background: #fff7ed;
+  color: var(--orange-dark); font-size: 11px; font-weight: 700;
+  cursor: pointer; white-space: nowrap; transition: all .15s;
+}
+.btn-hero-filter:hover, .btn-hero-filter.active { background: var(--orange); color: var(--white); }
 
 /* ─── Toolbar ─────────────────────────────────────────────── */
 .toolbar {
-  padding: 8px 28px;
-  display: flex; align-items: center; gap: 8px;
+  padding: 8px 28px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
 }
 .toolbar-info { font-size: 12px; color: var(--gray-500); }
 .btn-sm {
@@ -114,164 +99,119 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
   cursor: pointer; transition: all .15s;
 }
 .btn-sm:hover { background: var(--gray-100); }
+.sort-wrap { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.sort-label { font-size: 10px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: .5px; }
 
 /* ─── Grid ────────────────────────────────────────────────── */
 .grid-wrap { padding: 0 28px 130px; }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 14px;
-}
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
 
 /* ─── Card ────────────────────────────────────────────────── */
 .card {
   background: var(--white); border-radius: var(--radius);
   box-shadow: var(--shadow-sm); overflow: hidden;
-  cursor: pointer; position: relative;
-  border: 2px solid transparent;
+  cursor: pointer; position: relative; border: 2px solid transparent;
   transition: box-shadow .15s, transform .15s;
 }
 .card:hover    { box-shadow: var(--shadow-md); transform: translateY(-2px); }
 .card.selected { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(249,115,22,.18); }
 
-.card-thumb {
-  width: 100%; height: 155px;
-  object-fit: cover; display: block; background: var(--gray-100);
-}
+.card-thumb { width: 100%; height: 155px; object-fit: cover; display: block; background: var(--gray-100); }
 .card-no-thumb {
   width: 100%; height: 155px;
   background: linear-gradient(135deg, var(--gray-100), var(--gray-200));
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   color: var(--gray-400); font-size: 11px; gap: 6px;
 }
-.card-body { padding: 9px 11px 10px; }
-.card-cat {
-  display: inline-block; padding: 2px 7px; border-radius: 20px;
-  font-size: 9px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .4px; margin-bottom: 4px;
-}
-.card-filename {
-  font-size: 11px; font-weight: 600; color: var(--gray-900);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px;
-}
+.card-body { padding: 9px 11px 6px; }
+.card-cat { display: inline-block; padding: 2px 7px; border-radius: 20px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }
+.card-filename { font-size: 11px; font-weight: 600; color: var(--gray-900); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
 .card-meta { font-size: 10px; color: var(--gray-500); margin-bottom: 5px; }
-.card-tags  { display: flex; flex-wrap: wrap; gap: 3px; }
-.tag {
-  background: var(--gray-100); color: var(--gray-600);
-  border-radius: 4px; padding: 1px 5px; font-size: 9px;
-}
+.card-tags { display: flex; flex-wrap: wrap; gap: 3px; }
+.tag { background: var(--gray-100); color: var(--gray-600); border-radius: 4px; padding: 1px 5px; font-size: 9px; }
+
+/* Card footer: scores */
 .card-footer {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 5px 11px 7px; border-top: 1px solid var(--gray-100);
+  padding: 5px 11px 7px; border-top: 1px solid var(--gray-100); gap: 4px; flex-wrap: wrap;
 }
-.quality-pill {
-  display: flex; align-items: center; gap: 3px;
-  font-size: 10px; font-weight: 700;
-}
+.quality-pill { display: flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 700; }
 .q-dot { width: 7px; height: 7px; border-radius: 50%; }
+.score-pill { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 10px; white-space: nowrap; }
 
-
-/* Sensitive flag overlay */
-.sensitive-flag {
-  position: absolute; bottom: 50px; right: 8px;
-  background: var(--red); color: var(--white);
-  font-size: 9px; font-weight: 700; padding: 2px 7px;
-  border-radius: 20px; pointer-events: none;
+/* Card overlay badges (top-right corner stack) */
+.card-badges { position: absolute; top: 8px; right: 8px; display: flex; flex-direction: column; gap: 3px; align-items: flex-end; pointer-events: none; }
+.badge {
+  font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 20px;
+  letter-spacing: .3px; text-transform: uppercase;
 }
+.badge-hero      { background: var(--orange);   color: var(--white); }
+.badge-excellent { background: #16a34a;          color: var(--white); }
+.badge-dup       { background: #fee2e2;          color: var(--red); border: 1px solid #fca5a5; }
+.badge-neardup   { background: #fef9c3;          color: #854d0e; border: 1px solid #fde68a; }
+.badge-dnu       { background: var(--gray-700);  color: var(--white); }
 
-/* Select checkbox overlay */
+/* Select overlay */
 .select-overlay {
   position: absolute; top: 8px; left: 8px;
   width: 22px; height: 22px; background: var(--white);
   border: 2px solid var(--gray-300); border-radius: 6px;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; z-index: 2; box-shadow: var(--shadow-sm);
-  transition: all .15s;
+  cursor: pointer; z-index: 2; box-shadow: var(--shadow-sm); transition: all .15s;
 }
 .select-overlay:hover { border-color: var(--orange); }
 .card.selected .select-overlay { background: var(--orange); border-color: var(--orange); }
 .chk { display: none; }
 .card.selected .chk { display: block; }
 
-/* ─── State screens ───────────────────────────────────────── */
-.state {
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 80px 20px; text-align: center; color: var(--gray-500);
+/* Sensitive flag */
+.sensitive-flag {
+  position: absolute; bottom: 50px; right: 8px;
+  background: var(--red); color: var(--white);
+  font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 20px; pointer-events: none;
 }
+
+/* ─── State screens ───────────────────────────────────────── */
+.state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; text-align: center; color: var(--gray-500); }
 .state svg  { margin-bottom: 16px; opacity: .4; }
 .state h2   { font-size: 17px; color: var(--gray-700); margin-bottom: 8px; }
 .state p    { font-size: 13px; max-width: 380px; line-height: 1.6; }
-.state code {
-  display: block; margin-top: 12px; background: var(--gray-100);
-  border: 1px solid var(--gray-200); border-radius: 6px;
-  padding: 10px 16px; font-size: 11px; color: var(--gray-700); text-align: left;
-}
-.spinner {
-  width: 38px; height: 38px;
-  border: 3px solid var(--gray-200); border-top-color: var(--navy-mid);
-  border-radius: 50%; animation: spin .8s linear infinite; margin-bottom: 16px;
-}
+.state code { display: block; margin-top: 12px; background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: 6px; padding: 10px 16px; font-size: 11px; color: var(--gray-700); text-align: left; }
+.spinner { width: 38px; height: 38px; border: 3px solid var(--gray-200); border-top-color: var(--navy-mid); border-radius: 50%; animation: spin .8s linear infinite; margin-bottom: 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ─── Modal ───────────────────────────────────────────────── */
-.backdrop {
-  position: fixed; inset: 0; background: rgba(0,0,0,.78);
-  z-index: 200; display: flex; align-items: center; justify-content: center;
-  padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s;
-}
+.backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.78); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s; }
 .backdrop.open { opacity: 1; pointer-events: all; }
-.modal {
-  background: var(--white); border-radius: 14px;
-  overflow: hidden; width: 100%; max-width: 880px; max-height: 92vh;
-  display: flex; flex-direction: column;
-  box-shadow: var(--shadow-lg);
-  transform: scale(.96); transition: transform .2s;
-}
+.modal { background: var(--white); border-radius: 14px; overflow: hidden; width: 100%; max-width: 900px; max-height: 92vh; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); transform: scale(.96); transition: transform .2s; }
 .backdrop.open .modal { transform: scale(1); }
-.modal-img-wrap {
-  background: var(--gray-900); flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  max-height: 440px; overflow: hidden;
-}
-.modal-img { max-width: 100%; max-height: 440px; object-fit: contain; display: block; }
+.modal-img-wrap { background: var(--gray-900); flex-shrink: 0; display: flex; align-items: center; justify-content: center; max-height: 400px; overflow: hidden; }
+.modal-img { max-width: 100%; max-height: 400px; object-fit: contain; display: block; }
 .modal-body { padding: 20px 24px; overflow-y: auto; }
-.modal-header {
-  display: flex; align-items: flex-start;
-  justify-content: space-between; gap: 12px; margin-bottom: 14px;
-}
+.modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
 .modal-filename { font-size: 14px; font-weight: 700; word-break: break-all; }
-.modal-close {
-  width: 30px; height: 30px; border-radius: 7px;
-  border: 1px solid var(--gray-200); background: var(--white);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; color: var(--gray-500); transition: all .15s;
-}
+.modal-close { width: 30px; height: 30px; border-radius: 7px; border: 1px solid var(--gray-200); background: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--gray-500); transition: all .15s; }
 .modal-close:hover { background: var(--gray-100); color: var(--gray-900); }
+
+/* Scores section in modal */
+.score-section { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.score-card { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 8px; padding: 10px 14px; }
+.score-card label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--gray-500); display: block; margin-bottom: 4px; }
+.score-value { font-size: 22px; font-weight: 800; line-height: 1; }
+.score-tier  { font-size: 10px; font-weight: 600; margin-top: 3px; }
+.score-reason { font-size: 9px; color: var(--gray-500); margin-top: 4px; line-height: 1.4; }
+
 .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-bottom: 14px; }
 .meta-item label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--gray-500); display: block; margin-bottom: 2px; }
 .meta-item span  { font-size: 12px; }
 .flag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-.flag {
-  font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 20px;
-  background: var(--gray-100); color: var(--gray-600);
-}
+.flag { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 20px; background: var(--gray-100); color: var(--gray-600); }
 .flag.warn { background: #fee2e2; color: var(--red); }
 .flag.ok   { background: #dcfce7; color: var(--green); }
-.caption-box {
-  background: var(--gray-50); border: 1px solid var(--gray-200);
-  border-radius: 7px; padding: 10px 14px; margin-bottom: 14px;
-  font-size: 12px; color: var(--gray-700); font-style: italic; line-height: 1.5;
-}
+.caption-box { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 7px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: var(--gray-700); font-style: italic; line-height: 1.5; }
 .modal-tags  { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
 .modal-acts  { display: flex; gap: 8px; flex-wrap: wrap; }
-.btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 15px; border-radius: 8px; font-size: 12px;
-  font-weight: 600; cursor: pointer; border: none;
-  transition: all .15s; text-decoration: none;
-}
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 15px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; text-decoration: none; }
 .btn-navy    { background: var(--navy-mid); color: var(--white); }
 .btn-navy:hover  { background: var(--navy); }
 .btn-orange  { background: var(--orange); color: var(--white); }
@@ -282,44 +222,18 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
 .btn-ghost:hover { background: var(--gray-100); }
 
 /* ─── Selection tray ──────────────────────────────────────── */
-.tray {
-  position: fixed; bottom: 0; left: 0; right: 0; height: var(--tray-h);
-  background: var(--navy); color: var(--white);
-  display: flex; align-items: center; gap: 14px; padding: 0 28px;
-  z-index: 150; box-shadow: 0 -4px 20px rgba(0,0,0,.25);
-  transform: translateY(100%); transition: transform .25s cubic-bezier(.4,0,.2,1);
-}
+.tray { position: fixed; bottom: 0; left: 0; right: 0; height: var(--tray-h); background: var(--navy); color: var(--white); display: flex; align-items: center; gap: 14px; padding: 0 28px; z-index: 150; box-shadow: 0 -4px 20px rgba(0,0,0,.25); transform: translateY(100%); transition: transform .25s cubic-bezier(.4,0,.2,1); }
 .tray.visible { transform: translateY(0); }
 .tray-count { font-size: 12px; font-weight: 700; white-space: nowrap; min-width: 80px; }
 .tray-count span { font-size: 20px; display: block; line-height: 1.1; }
-.tray-thumbs {
-  display: flex; gap: 6px; overflow-x: auto; flex: 1; padding: 4px 0;
-  scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.2) transparent;
-}
-.tray-thumb {
-  width: 52px; height: 52px; object-fit: cover; border-radius: 6px;
-  flex-shrink: 0; border: 2px solid rgba(255,255,255,.2);
-}
-.tray-no-thumb {
-  width: 52px; height: 52px; background: rgba(255,255,255,.08);
-  border-radius: 6px; flex-shrink: 0;
-  border: 2px dashed rgba(255,255,255,.2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 8px; color: rgba(255,255,255,.4); text-align: center;
-}
+.tray-thumbs { display: flex; gap: 6px; overflow-x: auto; flex: 1; padding: 4px 0; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.2) transparent; }
+.tray-thumb { width: 52px; height: 52px; object-fit: cover; border-radius: 6px; flex-shrink: 0; border: 2px solid rgba(255,255,255,.2); }
+.tray-no-thumb { width: 52px; height: 52px; background: rgba(255,255,255,.08); border-radius: 6px; flex-shrink: 0; border: 2px dashed rgba(255,255,255,.2); display: flex; align-items: center; justify-content: center; font-size: 8px; color: rgba(255,255,255,.4); text-align: center; }
 .tray-acts { display: flex; gap: 6px; flex-shrink: 0; }
 .tray .btn { font-size: 11px; padding: 6px 13px; }
 
 /* ─── Toast ───────────────────────────────────────────────── */
-.toast {
-  position: fixed; bottom: calc(var(--tray-h) + 14px); left: 50%;
-  transform: translateX(-50%) translateY(16px);
-  background: var(--gray-900); color: var(--white);
-  padding: 9px 18px; border-radius: 8px; font-size: 12px; font-weight: 500;
-  pointer-events: none; opacity: 0; z-index: 300;
-  transition: opacity .2s, transform .2s; white-space: nowrap;
-  box-shadow: var(--shadow-lg);
-}
+.toast { position: fixed; bottom: calc(var(--tray-h) + 14px); left: 50%; transform: translateX(-50%) translateY(16px); background: var(--gray-900); color: var(--white); padding: 9px 18px; border-radius: 8px; font-size: 12px; font-weight: 500; pointer-events: none; opacity: 0; z-index: 300; transition: opacity .2s, transform .2s; white-space: nowrap; box-shadow: var(--shadow-lg); }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ─── Responsive ──────────────────────────────────────────── */
@@ -328,7 +242,7 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
   .filters { top: 60px; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px; }
   .search-input { width: 130px; }
-  .meta-grid { grid-template-columns: 1fr; }
+  .meta-grid, .score-section { grid-template-columns: 1fr; }
   .tray { padding: 0 14px; }
   .tray-thumbs { display: none; }
 }
@@ -354,6 +268,11 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
 
 <!-- ── Filters ─────────────────────────────────────────────── -->
 <div class="filters">
+
+  <!-- Quick-filter: Best Hero Images -->
+  <button class="btn-hero-filter" id="btn-hero" onclick="toggleHeroFilter()">🏆 Best Hero Images</button>
+  <div class="filter-divider"></div>
+
   <div class="filter-group">
     <span class="filter-label">Category</span>
     <select id="f-category"><option value="">All</option></select>
@@ -363,8 +282,59 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
     <span class="filter-label">Use Case</span>
     <select id="f-usecase"><option value="">All</option></select>
   </div>
+
   <div class="filter-group">
-    <span class="filter-label">Quality</span>
+    <span class="filter-label">Quality Tier</span>
+    <select id="f-tier">
+      <option value="">All</option>
+      <option value="Excellent">Excellent</option>
+      <option value="Good">Good</option>
+      <option value="Usable">Usable</option>
+      <option value="Low Quality">Low Quality</option>
+      <option value="Do Not Use">Do Not Use</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-label">Duplicates</span>
+    <select id="f-dup">
+      <option value="">All</option>
+      <option value="Unique">Unique only</option>
+      <option value="Near Duplicate">Near Duplicates</option>
+      <option value="Exact Duplicate">Exact Duplicates</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-label">Min Score</span>
+    <select id="f-score">
+      <option value="0">Any</option>
+      <option value="50">50+</option>
+      <option value="60">60+</option>
+      <option value="70">70+</option>
+      <option value="80">80+</option>
+      <option value="90">90+</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-label">Hero Score</span>
+    <select id="f-hero-score">
+      <option value="0">Any</option>
+      <option value="60">60+</option>
+      <option value="70">70+</option>
+      <option value="80">80+</option>
+      <option value="90">90+</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-label">Hero Use</span>
+    <select id="f-hero-use"><option value="">All</option></select>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-label">AI Quality</span>
     <select id="f-quality">
       <option value="0">Any</option>
       <option value="5">5+</option>
@@ -374,9 +344,11 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
       <option value="9">9+</option>
     </select>
   </div>
+
   <div class="filter-group">
     <input type="search" id="f-search" class="search-input" placeholder="Search…">
   </div>
+
   <button class="btn-clear-filters" onclick="clearFilters()">✕ Clear</button>
 </div>
 
@@ -385,6 +357,15 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
   <span class="toolbar-info" id="toolbar-info"></span>
   <button class="btn-sm" onclick="selectAll()">Select all</button>
   <button class="btn-sm" onclick="clearSel()">Deselect all</button>
+  <div class="sort-wrap">
+    <span class="sort-label">Sort</span>
+    <select id="f-sort" style="height:28px;font-size:11px">
+      <option value="best_photo_score">Best Photo Score</option>
+      <option value="hero_score">Hero Score</option>
+      <option value="quality_score">AI Quality</option>
+      <option value="newest">Newest First</option>
+    </select>
+  </div>
 </div>
 
 <!-- ── Grid / States ──────────────────────────────────────── -->
@@ -410,7 +391,7 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
       <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 18h16.5"/>
     </svg>
     <h2>No photos match</h2>
-    <p>Try clearing your filters, or run <code>sync_and_classify.py</code> to add new photos.</p>
+    <p>Try clearing your filters or clicking <strong>✕ Clear</strong>.</p>
   </div>
 
   <div class="grid" id="photo-grid" style="display:none"></div>
@@ -438,10 +419,21 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
         <div class="modal-filename" id="m-filename"></div>
         <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
+      <!-- Phase 2: score cards -->
+      <div class="score-section" id="m-scores"></div>
+      <!-- Core metadata -->
       <div class="meta-grid" id="m-meta"></div>
+      <!-- Safety flags -->
       <div class="flag-row" id="m-flags"></div>
+      <!-- Duplicate info (shown only for duplicates) -->
+      <div id="m-dup-info" style="display:none; margin-bottom:12px;
+           background:#fef9c3; border:1px solid #fde68a; border-radius:7px; padding:10px 14px;
+           font-size:11px; color:#854d0e;"></div>
+      <!-- Recommended caption -->
       <div class="caption-box" id="m-caption" style="display:none"></div>
+      <!-- Tags -->
       <div class="modal-tags" id="m-tags"></div>
+      <!-- Actions -->
       <div class="modal-acts" id="m-acts"></div>
     </div>
   </div>
@@ -452,15 +444,15 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
 
 <script>
 // ─── Config ─────────────────────────────────────────────────
-// Path to the photos JSON — relative to this HTML file
 const PHOTOS_URL = '../metadata/photos.json';
 
 // ─── State ──────────────────────────────────────────────────
 let allPhotos      = [];
 let filteredPhotos = [];
 let selectedIds    = new Set();
+let heroFilterOn   = false;
 
-// ─── Category color map ──────────────────────────────────────
+// ─── Color maps ──────────────────────────────────────────────
 const CAT_COLORS = {
   'Technician Working Shot':  { bg: '#dbeafe', tx: '#1d4ed8' },
   'Brake Parts':              { bg: '#fee2e2', tx: '#b91c1c' },
@@ -470,6 +462,7 @@ const CAT_COLORS = {
   'Vehicle Shot':             { bg: '#ede9fe', tx: '#6d28d9' },
   'Hero Image Candidate':     { bg: '#fff7ed', tx: '#c2410c' },
   'Not Marketing Ready':      { bg: '#f1f5f9', tx: '#64748b' },
+  'Exact Duplicate':          { bg: '#fee2e2', tx: '#991b1b' },
   'Other':                    { bg: '#f3e8ff', tx: '#7e22ce' },
 };
 
@@ -482,22 +475,28 @@ const USE_COLORS = {
   do_not_use:         '#dc2626',
 };
 
-function catColor(cat)   { return CAT_COLORS[cat] || { bg: '#f1f5f9', tx: '#374151' }; }
-function qualColor(s)    { return s >= 8 ? '#16a34a' : s >= 6 ? '#d97706' : '#dc2626'; }
+const TIER_COLORS = {
+  'Excellent':   { bg: '#dcfce7', tx: '#15803d' },
+  'Good':        { bg: '#dbeafe', tx: '#1d4ed8' },
+  'Usable':      { bg: '#fef9c3', tx: '#854d0e' },
+  'Low Quality': { bg: '#fee2e2', tx: '#991b1b' },
+  'Do Not Use':  { bg: '#1e293b', tx: '#f8fafc' },
+};
+
+function catColor(cat)  { return CAT_COLORS[cat] || { bg: '#f1f5f9', tx: '#374151' }; }
+function qualColor(s)   { return s >= 8 ? '#16a34a' : s >= 6 ? '#d97706' : '#dc2626'; }
+function scoreColor(s)  { return s >= 80 ? '#16a34a' : s >= 60 ? '#d97706' : '#dc2626'; }
+function tierColor(t)   { return TIER_COLORS[t] || { bg: '#f1f5f9', tx: '#374151' }; }
 
 // ─── Load ───────────────────────────────────────────────────
 async function load() {
   showState('loading');
   try {
-    const res = await fetch(PHOTOS_URL);
+    const res  = await fetch(PHOTOS_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
     const json = await res.json();
-
-    // Support both {photos: [...]} and bare array formats
     const data = Array.isArray(json) ? json : (json.photos || []);
-
     if (!data.length) { showState('empty'); return; }
-
     allPhotos = data;
     buildFilters();
     applyFilters();
@@ -513,9 +512,10 @@ async function load() {
 
 // ─── Build filter dropdowns from data ───────────────────────
 function buildFilters() {
-  const unique = (arr) => [...new Set(arr.filter(Boolean))].sort();
+  const unique   = arr => [...new Set(arr.filter(Boolean))].sort();
   const populate = (id, values) => {
     const sel = document.getElementById(id);
+    if (!sel) return;
     values.forEach(v => {
       const o = document.createElement('option');
       o.value = o.textContent = v;
@@ -524,38 +524,77 @@ function buildFilters() {
   };
   populate('f-category', unique(allPhotos.map(p => p.category)));
   populate('f-usecase',  unique(allPhotos.map(p => p.marketing_use_case)));
+  populate('f-hero-use', unique(allPhotos.map(p => p.hero_use_case).filter(x => x && x !== 'Not Recommended')));
 }
 
-// ─── Filter logic ────────────────────────────────────────────
+// ─── Hero quick-filter ───────────────────────────────────────
+function toggleHeroFilter() {
+  heroFilterOn = !heroFilterOn;
+  document.getElementById('btn-hero').classList.toggle('active', heroFilterOn);
+  if (heroFilterOn) {
+    // Set hero score to 80+ and clear other filters
+    document.getElementById('f-hero-score').value = '80';
+    document.getElementById('f-dup').value = 'Unique';
+  } else {
+    document.getElementById('f-hero-score').value = '0';
+    document.getElementById('f-dup').value = '';
+  }
+  applyFilters();
+}
+
+// ─── Filter + Sort logic ─────────────────────────────────────
 function applyFilters() {
-  const cat     = v('f-category');
-  const usecase = v('f-usecase');
-  const minQ    = parseInt(v('f-quality'))  || 0;
-  const search = v('f-search').trim().toLowerCase();
+  const cat      = v('f-category');
+  const usecase  = v('f-usecase');
+  const tier     = v('f-tier');
+  const dup      = v('f-dup');
+  const minScore = parseInt(v('f-score'))      || 0;
+  const minHero  = parseInt(v('f-hero-score')) || 0;
+  const heroUse  = v('f-hero-use');
+  const minQ     = parseInt(v('f-quality'))    || 0;
+  const search   = v('f-search').trim().toLowerCase();
+  const sortBy   = v('f-sort');
 
   filteredPhotos = allPhotos.filter(p => {
-    if (cat     && p.category            !== cat)     return false;
-    if (usecase && p.marketing_use_case  !== usecase)  return false;
-    if (minQ   && (p.quality_score || 0) < minQ)         return false;
+    if (cat     && p.category           !== cat)     return false;
+    if (usecase && p.marketing_use_case !== usecase)  return false;
+    if (tier    && p.quality_tier       !== tier)     return false;
+    if (dup     && p.duplicate_status   !== dup)      return false;
+    if (heroUse && p.hero_use_case      !== heroUse)  return false;
+    if (minScore && (p.best_photo_score || 0) < minScore) return false;
+    if (minHero  && (p.hero_score || 0)       < minHero)  return false;
+    if (minQ     && (p.quality_score || 0)    < minQ)     return false;
     if (search) {
       const hay = [p.filename, p.technician, p.market, p.category,
-                   p.recommended_caption, ...(p.tags || [])].join(' ').toLowerCase();
+                   p.recommended_caption, p.hero_use_case, p.quality_tier,
+                   ...(p.tags || [])].join(' ').toLowerCase();
       if (!hay.includes(search)) return false;
     }
     return true;
+  });
+
+  // ── Sort ──────────────────────────────────────────────────
+  filteredPhotos.sort((a, b) => {
+    if (sortBy === 'best_photo_score') return (b.best_photo_score || 0) - (a.best_photo_score || 0);
+    if (sortBy === 'hero_score')       return (b.hero_score || 0)       - (a.hero_score || 0);
+    if (sortBy === 'quality_score')    return (b.quality_score || 0)    - (a.quality_score || 0);
+    if (sortBy === 'newest')           return (b.uploaded_at || '').localeCompare(a.uploaded_at || '');
+    return 0;
   });
 
   renderGrid();
   updateCounts();
 }
 
-function v(id) { return document.getElementById(id).value || ''; }
+function v(id) {
+  const el = document.getElementById(id);
+  return el ? (el.value || '') : '';
+}
 
 // ─── Render ──────────────────────────────────────────────────
 function renderGrid() {
   const grid = document.getElementById('photo-grid');
   grid.innerHTML = '';
-
   if (!filteredPhotos.length) { showState('empty'); return; }
   showState('grid');
 
@@ -568,6 +607,7 @@ function renderGrid() {
     card.className = 'card' + (sel ? ' selected' : '');
     card.dataset.id = p.id;
 
+    // ── Thumbnail ─────────────────────────────────────────
     const thumb = (p.thumbnail_url && !p.thumbnail_url.includes('SAMPLE'))
       ? `<img class="card-thumb" src="${esc(p.thumbnail_url)}" alt="${esc(p.filename)}"
              loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
@@ -580,7 +620,27 @@ function renderGrid() {
              <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909"/>
            </svg>Sample data</div>`;
 
+    // ── Overlay badges (top-right) ────────────────────────
+    let badges = '';
+    const dupStatus = p.duplicate_status || '';
+    const tier      = p.quality_tier     || '';
+    const hScore    = p.hero_score        || 0;
+
+    if (dupStatus === 'Exact Duplicate') badges += `<span class="badge badge-dnu">Duplicate</span>`;
+    else if (dupStatus === 'Near Duplicate') badges += `<span class="badge badge-neardup">Near Dup</span>`;
+
+    if (tier === 'Excellent')   badges += `<span class="badge badge-excellent">Excellent</span>`;
+    if (tier === 'Do Not Use')  badges += `<span class="badge badge-dnu">Do Not Use</span>`;
+    if (hScore >= 80)           badges += `<span class="badge badge-hero">🏆 Hero</span>`;
+
     const tags = (p.tags || []).slice(0,3).map(t => `<span class="tag">${esc(t)}</span>`).join('');
+
+    // ── Score pills ───────────────────────────────────────
+    const bScore = p.best_photo_score || 0;
+    const scorePill = bScore
+      ? `<span class="score-pill" style="background:${scoreColor(bScore)}20;color:${scoreColor(bScore)}">
+           ★ ${bScore}</span>`
+      : '';
 
     card.innerHTML = `
       <div class="select-overlay" onclick="toggleSel(event,'${p.id}')">
@@ -588,6 +648,7 @@ function renderGrid() {
           <polyline points="20 6 9 17 4 12"/>
         </svg>
       </div>
+      <div class="card-badges">${badges}</div>
       ${p.contains_sensitive_info ? '<div class="sensitive-flag">⚠ Sensitive</div>' : ''}
       ${thumb}
       <div class="card-body">
@@ -601,6 +662,7 @@ function renderGrid() {
           <span class="q-dot" style="background:${qc}"></span>
           <span style="color:${qc}">${p.quality_score || '—'}/10</span>
         </div>
+        ${scorePill}
       </div>`;
 
     card.addEventListener('click', e => {
@@ -620,34 +682,21 @@ function toggleSel(e, id) {
   if (card) card.classList.toggle('selected', selectedIds.has(id));
   updateTray(); updateCounts();
 }
-
-function selectAll() {
-  filteredPhotos.forEach(p => selectedIds.add(p.id));
-  renderGrid(); updateTray(); updateCounts();
-}
-
-function clearSel() {
-  selectedIds.clear();
-  document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
-  updateTray(); updateCounts();
-}
+function selectAll() { filteredPhotos.forEach(p => selectedIds.add(p.id)); renderGrid(); updateTray(); updateCounts(); }
+function clearSel()  { selectedIds.clear(); document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected')); updateTray(); updateCounts(); }
 
 // ─── Tray ────────────────────────────────────────────────────
 function updateTray() {
   const n = selectedIds.size;
   document.getElementById('tray-ct').textContent = n;
   document.getElementById('tray').classList.toggle('visible', n > 0);
-
   const wrap = document.getElementById('tray-thumbs');
   wrap.innerHTML = '';
   [...selectedIds].forEach(id => {
     const p = allPhotos.find(x => x.id === id);
     if (!p) return;
     if (p.thumbnail_url && !p.thumbnail_url.includes('SAMPLE')) {
-      const img = Object.assign(document.createElement('img'), {
-        className: 'tray-thumb', src: p.thumbnail_url,
-        alt: p.filename, title: p.filename,
-      });
+      const img = Object.assign(document.createElement('img'), { className: 'tray-thumb', src: p.thumbnail_url, alt: p.filename, title: p.filename });
       img.onerror = () => img.replaceWith(noThumb(p.filename));
       wrap.appendChild(img);
     } else {
@@ -655,7 +704,6 @@ function updateTray() {
     }
   });
 }
-
 function noThumb(name) {
   const d = document.createElement('div');
   d.className = 'tray-no-thumb'; d.title = name; d.textContent = 'no img';
@@ -664,41 +712,78 @@ function noThumb(name) {
 
 // ─── Modal ───────────────────────────────────────────────────
 function openModal(p) {
-  const cc = catColor(p.category);
-  const qc = qualColor(p.quality_score || 0);
-  const uc = USE_COLORS[p.marketing_use_case] || '#64748b';
+  const cc   = catColor(p.category);
+  const qc   = qualColor(p.quality_score || 0);
+  const uc   = USE_COLORS[p.marketing_use_case] || '#64748b';
+  const tc   = tierColor(p.quality_tier);
+  const bs   = p.best_photo_score || 0;
+  const hs   = p.hero_score || 0;
 
   document.getElementById('m-img').src = (p.web_url && !p.web_url.includes('SAMPLE')) ? p.web_url : '';
   document.getElementById('m-filename').textContent = p.filename;
 
+  // ── Phase 2 score cards ────────────────────────────────
+  document.getElementById('m-scores').innerHTML = bs || hs ? `
+    <div class="score-card">
+      <label>Best Photo Score</label>
+      <div class="score-value" style="color:${scoreColor(bs)}">${bs || '—'}</div>
+      <div class="score-tier" style="background:${tc.bg};color:${tc.tx};display:inline-block;padding:1px 8px;border-radius:20px;font-size:10px">
+        ${esc(p.quality_tier || '—')}
+      </div>
+      <div class="score-reason">${esc(p.score_reason || '')}</div>
+    </div>
+    <div class="score-card">
+      <label>Hero Score</label>
+      <div class="score-value" style="color:${scoreColor(hs)}">${hs || '—'}</div>
+      <div class="score-tier" style="color:${scoreColor(hs)};font-weight:700;font-size:11px">
+        ${esc(p.hero_use_case || 'Not scored')}
+      </div>
+      <div class="score-reason">${esc(p.hero_reason || '')}</div>
+    </div>` : '';
+
+  // ── Core metadata ─────────────────────────────────────
   document.getElementById('m-meta').innerHTML = `
     <div class="meta-item"><label>Category</label>
       <span style="background:${cc.bg};color:${cc.tx};padding:2px 8px;border-radius:20px;font-size:11px">${esc(p.category)}</span>
     </div>
-    <div class="meta-item"><label>Quality</label>
+    <div class="meta-item"><label>AI Quality</label>
       <span style="color:${qc};font-weight:700">${p.quality_score || '—'}/10</span>
     </div>
-    <div class="meta-item"><label>Technician</label><span>${esc(p.technician || '—')}</span></div>
-    <div class="meta-item"><label>Market</label><span>${esc(p.market || '—')}</span></div>
     <div class="meta-item"><label>Marketing Use</label>
       <span style="background:${uc}18;color:${uc};padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600">
         ${esc((p.marketing_use_case || '').replace(/_/g,' '))}
       </span>
     </div>
+    <div class="meta-item"><label>Recommended Usage</label>
+      <span style="font-size:11px">${esc(p.recommended_usage || '—')}</span>
+    </div>
+    <div class="meta-item"><label>Technician</label><span>${esc(p.technician || '—')}</span></div>
+    <div class="meta-item"><label>Market</label><span>${esc(p.market || '—')}</span></div>
     <div class="meta-item"><label>Uploaded</label><span>${esc(p.uploaded_at || '—')}</span></div>
     <div class="meta-item"><label>Processed</label><span>${esc(p.processed_at || '—')}</span></div>`;
 
-  // Safety flags
+  // ── Safety flags ──────────────────────────────────────
   const flags = [
     { label: '👤 Contains customer', val: p.contains_customer,       cls: p.contains_customer ? 'warn' : 'ok' },
     { label: '🚘 License plate',     val: p.contains_license_plate,  cls: p.contains_license_plate ? 'warn' : 'ok' },
     { label: '⚠ Sensitive info',    val: p.contains_sensitive_info, cls: p.contains_sensitive_info ? 'warn' : 'ok' },
   ];
   document.getElementById('m-flags').innerHTML = flags.map(f =>
-    `<span class="flag ${f.cls}" title="${f.val ? 'Yes' : 'No'}">${f.label}: ${f.val ? 'Yes' : 'No'}</span>`
+    `<span class="flag ${f.cls}">${f.label}: ${f.val ? 'Yes' : 'No'}</span>`
   ).join('');
 
-  // Caption
+  // ── Duplicate info ────────────────────────────────────
+  const dupEl = document.getElementById('m-dup-info');
+  const dup   = p.duplicate_status || 'Unique';
+  if (dup !== 'Unique' && dup !== '') {
+    dupEl.style.display = 'block';
+    dupEl.innerHTML = `<strong>${esc(dup)}</strong> — similar to <em>${esc(p.duplicate_of || '?')}</em>
+      ${p.duplicate_confidence ? `(${p.duplicate_confidence}% confidence)` : ''}`;
+  } else {
+    dupEl.style.display = 'none';
+  }
+
+  // ── Caption ───────────────────────────────────────────
   const capEl = document.getElementById('m-caption');
   if (p.recommended_caption) {
     capEl.textContent = `"${p.recommended_caption}"`;
@@ -728,55 +813,37 @@ function toggleSelModal(id) {
   const btn = document.querySelector('#m-acts .btn-navy');
   if (btn) btn.textContent = selectedIds.has(id) ? '✓ Selected' : '+ Select';
 }
-
 function closeModal() {
   document.getElementById('backdrop').classList.remove('open');
   document.body.style.overflow = '';
   setTimeout(() => { document.getElementById('m-img').src = ''; }, 200);
 }
-
 function handleBdClick(e) {
   if (e.target === document.getElementById('backdrop')) closeModal();
 }
 
 // ─── Actions ─────────────────────────────────────────────────
 async function copyURLs() {
-  const urls = [...selectedIds]
-    .map(id => allPhotos.find(p => p.id === id)?.web_url)
-    .filter(Boolean).join('\n');
+  const urls = [...selectedIds].map(id => allPhotos.find(p => p.id === id)?.web_url).filter(Boolean).join('\n');
   await doClipboard(urls, `Copied ${selectedIds.size} URL(s)`);
 }
-
-async function copyOne(url) {
-  if (url) await doClipboard(url, 'URL copied');
-}
-
+async function copyOne(url) { if (url) await doClipboard(url, 'URL copied'); }
 async function doClipboard(text, msg) {
-  try {
-    await navigator.clipboard.writeText(text);
-    toast(msg);
-  } catch { toast('Copy failed — try HTTPS or allow clipboard access'); }
+  try { await navigator.clipboard.writeText(text); toast(msg); }
+  catch { toast('Copy failed — try HTTPS or allow clipboard access'); }
 }
-
 async function downloadSel() {
   if (!selectedIds.size) return;
   toast(`Starting ${selectedIds.size} download(s)…`);
   for (const id of selectedIds) {
     const p = allPhotos.find(x => x.id === id);
-    if (!p?.original_url || p.original_url.includes('SAMPLE')) {
-      window.open(p?.web_url || p?.original_url, '_blank');
-      continue;
-    }
+    if (!p?.original_url || p.original_url.includes('SAMPLE')) { window.open(p?.web_url || p?.original_url, '_blank'); continue; }
     try {
       const res  = await fetch(p.original_url);
       const blob = await res.blob();
-      const a    = Object.assign(document.createElement('a'), {
-        href: URL.createObjectURL(blob), download: p.filename,
-      });
+      const a    = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: p.filename });
       a.click(); URL.revokeObjectURL(a.href);
-    } catch {
-      window.open(p.original_url, '_blank');
-    }
+    } catch { window.open(p.original_url, '_blank'); }
     await new Promise(r => setTimeout(r, 500));
   }
 }
@@ -789,36 +856,39 @@ function updateCounts() {
   document.getElementById('toolbar-info').textContent =
     `${filteredPhotos.length} of ${allPhotos.length} photo${allPhotos.length !== 1 ? 's' : ''}`;
 }
-
 function showState(s) {
-  document.getElementById('s-loading').style.display = s === 'loading' ? 'flex'  : 'none';
-  document.getElementById('s-error').style.display   = s === 'error'   ? 'flex'  : 'none';
-  document.getElementById('s-empty').style.display   = s === 'empty'   ? 'flex'  : 'none';
-  document.getElementById('photo-grid').style.display= s === 'grid'    ? 'grid'  : 'none';
+  document.getElementById('s-loading').style.display = s === 'loading' ? 'flex' : 'none';
+  document.getElementById('s-error').style.display   = s === 'error'   ? 'flex' : 'none';
+  document.getElementById('s-empty').style.display   = s === 'empty'   ? 'flex' : 'none';
+  document.getElementById('photo-grid').style.display= s === 'grid'    ? 'grid' : 'none';
 }
-
 function clearFilters() {
-  ['f-category','f-usecase'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('f-quality').value = '0';
-  document.getElementById('f-search').value  = '';
+  heroFilterOn = false;
+  document.getElementById('btn-hero').classList.remove('active');
+  ['f-category','f-usecase','f-tier','f-dup','f-hero-use'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  ['f-score','f-hero-score','f-quality'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '0';
+  });
+  document.getElementById('f-search').value = '';
   applyFilters();
 }
-
 let _tt;
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   clearTimeout(_tt); _tt = setTimeout(() => t.classList.remove('show'), 2800);
 }
-
 function esc(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 // ─── Event listeners ─────────────────────────────────────────
-['f-category','f-usecase','f-quality'].forEach(id =>
-  document.getElementById(id).addEventListener('change', applyFilters));
+['f-category','f-usecase','f-tier','f-dup','f-score','f-hero-score','f-hero-use','f-quality','f-sort'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('change', applyFilters);
+});
 document.getElementById('f-search').addEventListener('input', applyFilters);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
