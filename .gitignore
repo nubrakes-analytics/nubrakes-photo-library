@@ -1,0 +1,20 @@
+# Secrets & credentials
+.env
+credentials/google-service-account.json
+credentials/*.json
+
+# Temp processing folder
+temp/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Mac
+.DS_Store
+
+# Old root-level gallery (moved to gallery/)
+/index.html
