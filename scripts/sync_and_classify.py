@@ -310,9 +310,15 @@ def make_file_public(drive, file_id):
         pass
 
 
-def drive_view_url(file_id):
-    """Return a public view URL for a Google Drive file (works for images in <img> tags)."""
-    return f"https://drive.google.com/uc?id={file_id}"
+def drive_view_url(file_id, size=None):
+    """
+    Return a public image URL for a Google Drive file that works in <img> tags.
+    Uses the thumbnail API which is more reliable than the uc?id= redirect.
+    size: e.g. 'w400' for thumbnail, 'w1200' for web. None = full size.
+    """
+    if size:
+        return f"https://drive.google.com/thumbnail?id={file_id}&sz={size}"
+    return f"https://lh3.googleusercontent.com/d/{file_id}"
 
 
 def drive_download_url(file_id):
@@ -563,8 +569,8 @@ def main():
 
             # 7. Build shareable URLs
             orig_url  = drive_view_url(file_id)
-            web_url   = drive_view_url(web_file_id)
-            thumb_url = drive_view_url(thumb_file_id)
+            web_url   = drive_view_url(web_file_id,   size="w1200")
+            thumb_url = drive_view_url(thumb_file_id, size="w400")
 
             # 8. Classify with OpenAI Vision (using the resized local copy)
             classification = classify_image(openai_client, temp_web, model=args.model)
