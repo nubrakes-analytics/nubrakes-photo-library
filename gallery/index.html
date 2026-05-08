@@ -375,6 +375,10 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
   </div>
 
   <div class="filter-group">
+    <span class="filter-label">Use Case</span>
+    <select id="f-usecase"><option value="">All</option></select>
+  </div>
+  <div class="filter-group">
     <span class="filter-label">Quality</span>
     <select id="f-quality">
       <option value="0">Any</option>
@@ -550,18 +554,21 @@ function buildFilters() {
     });
   };
   populate('f-category', unique(allPhotos.map(p => p.category)));
+  populate('f-usecase',  unique(allPhotos.map(p => p.marketing_use_case)));
 }
 
 // ─── Filter logic ────────────────────────────────────────────
 function applyFilters() {
-  const cat    = v('f-category');
-  const minQ   = parseInt(v('f-quality'))  || 0;
+  const cat     = v('f-category');
+  const usecase = v('f-usecase');
+  const minQ    = parseInt(v('f-quality'))  || 0;
   const status = v('f-approval');
   const hero   = document.getElementById('f-hero').checked;
   const search = v('f-search').trim().toLowerCase();
 
   filteredPhotos = allPhotos.filter(p => {
-    if (cat    && p.category    !== cat)                 return false;
+    if (cat     && p.category            !== cat)     return false;
+    if (usecase && p.marketing_use_case  !== usecase)  return false;
     if (minQ   && (p.quality_score || 0) < minQ)         return false;
     if (status && p.approval_status !== status)           return false;
     if (hero   && !p.hero_candidate)                      return false;
@@ -833,7 +840,7 @@ function showState(s) {
 }
 
 function clearFilters() {
-  ['f-category','f-approval'].forEach(id => document.getElementById(id).value = '');
+  ['f-category','f-usecase','f-approval'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('f-quality').value = '0';
   document.getElementById('f-hero').checked  = false;
   document.getElementById('f-search').value  = '';
@@ -853,7 +860,7 @@ function esc(s) {
 }
 
 // ─── Event listeners ─────────────────────────────────────────
-['f-category','f-quality','f-approval'].forEach(id =>
+['f-category','f-usecase','f-quality','f-approval'].forEach(id =>
   document.getElementById(id).addEventListener('change', applyFilters));
 document.getElementById('f-hero').addEventListener('change',  applyFilters);
 document.getElementById('f-search').addEventListener('input', applyFilters);
