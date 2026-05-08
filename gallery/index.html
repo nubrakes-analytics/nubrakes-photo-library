@@ -171,21 +171,6 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
 }
 .q-dot { width: 7px; height: 7px; border-radius: 50%; }
 
-/* Approval badge */
-.approval-badge {
-  font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 20px;
-}
-.status-approved { background: #dcfce7; color: var(--green); }
-.status-pending  { background: #fef9c3; color: #854d0e; }
-.status-rejected { background: #fee2e2; color: var(--red); }
-
-/* Hero star overlay */
-.hero-star {
-  position: absolute; top: 8px; right: 8px;
-  background: var(--orange); color: var(--white);
-  font-size: 10px; font-weight: 700; padding: 2px 7px;
-  border-radius: 20px; pointer-events: none;
-}
 
 /* Sensitive flag overlay */
 .sensitive-flag {
@@ -390,19 +375,6 @@ input[type="checkbox"].toggle { width: 14px; height: 14px; cursor: pointer; acce
     </select>
   </div>
   <div class="filter-group">
-    <span class="filter-label">Approval</span>
-    <select id="f-approval">
-      <option value="">All</option>
-      <option value="approved">Approved</option>
-      <option value="pending">Pending</option>
-      <option value="rejected">Rejected</option>
-    </select>
-  </div>
-  <div class="toggle-wrap">
-    <input type="checkbox" class="toggle" id="f-hero">
-    <label for="f-hero">Hero only</label>
-  </div>
-  <div class="filter-group">
     <input type="search" id="f-search" class="search-input" placeholder="Search…">
   </div>
   <button class="btn-clear-filters" onclick="clearFilters()">✕ Clear</button>
@@ -512,9 +484,6 @@ const USE_COLORS = {
 
 function catColor(cat)   { return CAT_COLORS[cat] || { bg: '#f1f5f9', tx: '#374151' }; }
 function qualColor(s)    { return s >= 8 ? '#16a34a' : s >= 6 ? '#d97706' : '#dc2626'; }
-function statusClass(s)  {
-  return { approved: 'status-approved', pending: 'status-pending', rejected: 'status-rejected' }[s] || 'status-pending';
-}
 
 // ─── Load ───────────────────────────────────────────────────
 async function load() {
@@ -562,16 +531,12 @@ function applyFilters() {
   const cat     = v('f-category');
   const usecase = v('f-usecase');
   const minQ    = parseInt(v('f-quality'))  || 0;
-  const status = v('f-approval');
-  const hero   = document.getElementById('f-hero').checked;
   const search = v('f-search').trim().toLowerCase();
 
   filteredPhotos = allPhotos.filter(p => {
     if (cat     && p.category            !== cat)     return false;
     if (usecase && p.marketing_use_case  !== usecase)  return false;
     if (minQ   && (p.quality_score || 0) < minQ)         return false;
-    if (status && p.approval_status !== status)           return false;
-    if (hero   && !p.hero_candidate)                      return false;
     if (search) {
       const hay = [p.filename, p.technician, p.market, p.category,
                    p.recommended_caption, ...(p.tags || [])].join(' ').toLowerCase();
@@ -598,7 +563,6 @@ function renderGrid() {
     const cc  = catColor(p.category);
     const qc  = qualColor(p.quality_score || 0);
     const sel = selectedIds.has(p.id);
-    const sc  = statusClass(p.approval_status);
 
     const card = document.createElement('div');
     card.className = 'card' + (sel ? ' selected' : '');
@@ -624,7 +588,6 @@ function renderGrid() {
           <polyline points="20 6 9 17 4 12"/>
         </svg>
       </div>
-      ${p.hero_candidate ? '<div class="hero-star">★ Hero</div>' : ''}
       ${p.contains_sensitive_info ? '<div class="sensitive-flag">⚠ Sensitive</div>' : ''}
       ${thumb}
       <div class="card-body">
@@ -638,7 +601,6 @@ function renderGrid() {
           <span class="q-dot" style="background:${qc}"></span>
           <span style="color:${qc}">${p.quality_score || '—'}/10</span>
         </div>
-        <span class="approval-badge ${sc}">${esc(p.approval_status || 'pending')}</span>
       </div>`;
 
     card.addEventListener('click', e => {
@@ -723,15 +685,11 @@ function openModal(p) {
         ${esc((p.marketing_use_case || '').replace(/_/g,' '))}
       </span>
     </div>
-    <div class="meta-item"><label>Approval</label>
-      <span class="approval-badge ${statusClass(p.approval_status)}">${esc(p.approval_status || 'pending')}</span>
-    </div>
     <div class="meta-item"><label>Uploaded</label><span>${esc(p.uploaded_at || '—')}</span></div>
     <div class="meta-item"><label>Processed</label><span>${esc(p.processed_at || '—')}</span></div>`;
 
   // Safety flags
   const flags = [
-    { label: '★ Hero candidate',    val: p.hero_candidate,         cls: p.hero_candidate ? 'ok' : '' },
     { label: '👤 Contains customer', val: p.contains_customer,       cls: p.contains_customer ? 'warn' : 'ok' },
     { label: '🚘 License plate',     val: p.contains_license_plate,  cls: p.contains_license_plate ? 'warn' : 'ok' },
     { label: '⚠ Sensitive info',    val: p.contains_sensitive_info, cls: p.contains_sensitive_info ? 'warn' : 'ok' },
@@ -840,9 +798,8 @@ function showState(s) {
 }
 
 function clearFilters() {
-  ['f-category','f-usecase','f-approval'].forEach(id => document.getElementById(id).value = '');
+  ['f-category','f-usecase'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('f-quality').value = '0';
-  document.getElementById('f-hero').checked  = false;
   document.getElementById('f-search').value  = '';
   applyFilters();
 }
@@ -860,9 +817,8 @@ function esc(s) {
 }
 
 // ─── Event listeners ─────────────────────────────────────────
-['f-category','f-usecase','f-quality','f-approval'].forEach(id =>
+['f-category','f-usecase','f-quality'].forEach(id =>
   document.getElementById(id).addEventListener('change', applyFilters));
-document.getElementById('f-hero').addEventListener('change',  applyFilters);
 document.getElementById('f-search').addEventListener('input', applyFilters);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
